@@ -37,6 +37,11 @@ module ActsAsParanoid
 
       def delete_all(conditions = nil)
         where(conditions).update_all(["#{paranoid_configuration[:column]} = ?", delete_now_value])
+        update_timestamp(conditions)
+      end
+
+      def update_timestamp(conditions)
+        unscoped.where(conditions).map(&:touch)
       end
 
       def paranoid_default_scope
